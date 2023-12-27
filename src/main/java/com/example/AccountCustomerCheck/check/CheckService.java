@@ -1,8 +1,13 @@
 package com.example.AccountCustomerCheck.check;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.example.AccountCustomerCheck.account.Account;
+import com.example.AccountCustomerCheck.account.AccountService;
+
 import java.util.List;
- 
+
 import java.util.Optional;
 
 @Service
@@ -10,6 +15,15 @@ public class CheckService {
 
     @Autowired
     private CheckRepository checkRepository; // Assuming you have a CheckRepository
+
+
+    public List<Check> getChecksForCustomer(Long customerId) {
+        // Assuming you have a method in CheckRepository for the custom query
+        // E.g., findByIssuerAccount_Customers_IdOrReceiverAccount_Customers_Id
+        return checkRepository.findByIssuerAccount_Customers_IdOrReceiverAccount_Customers_Id(customerId, customerId);
+    }
+
+
 
     public List<Check> getAllChecks() {
         return checkRepository.findAll();
@@ -20,12 +34,24 @@ public class CheckService {
         return optionalCheck.orElse(null);
     }
 
+    @Autowired
+    private AccountService accountService; // Assuming you have an AccountService
+
     public Check createCheck(CheckDTO checkDTO) {
-        // Create a new Check entity based on the DTO
-        Check newCheck = new Check();
-        // Populate fields based on the DTO
-        // For example: newCheck.setDescription(checkDTO.getDescription());
-        return checkRepository.save(newCheck);
+        // Retrieve issuer and receiver accounts
+        Account issuerAccount = accountService.getAccountById(checkDTO.getIssuerAccountId());
+        Account receiverAccount = accountService.getAccountById(checkDTO.getReceiverAccountId());
+
+        if (issuerAccount != null && receiverAccount != null) {
+            // Create a new Check entity
+            Check newCheck = new Check(checkDTO, issuerAccount, receiverAccount);
+
+            // Save the Check entity
+            return checkRepository.save(newCheck);
+        } else {
+            // Handle case where either issuer or receiver account is not found
+            return null;
+        }
     }
 
     public Check updateCheck(Long checkId, CheckDTO checkDTO) {

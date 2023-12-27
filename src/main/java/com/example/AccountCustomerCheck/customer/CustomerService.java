@@ -20,10 +20,14 @@ public class CustomerService {
         Optional<Customer> optionalCustomer = customerRepository.findById(customerId);
         return optionalCustomer.orElse(null);
     }
+    public List<Customer> getCustomersByIds(List<Long> customerIds) {
+        return customerRepository.findAllById(customerIds);
+    }
 
+    
     public Customer createCustomer(CustomerDTO customerDTO) {
         // Create a new Customer entity based on the DTO
-        Customer newCustomer = new Customer();
+        Customer newCustomer = new Customer(customerDTO);
         // Populate fields based on the DTO
         // For example: newCustomer.setFirstName(customerDTO.getFirstName());
         // Note: Handle relationships and other properties accordingly

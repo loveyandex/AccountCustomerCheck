@@ -5,6 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.example.AccountCustomerCheck.customer.CustomerDTO;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,11 +17,26 @@ public class AccountController {
     @Autowired
     private AccountService accountService; // Assuming you have an AccountService
 
+
+    private AccountWithCustomersDTO convertToAccountWithCustomersDTO(Account account) {
+        AccountWithCustomersDTO dto = new AccountWithCustomersDTO();
+        dto.setAccountId(account.getId());
+        dto.setAccountNumber(account.getAccountNumber());
+        dto.setCustomers(
+                account.getCustomers().stream()
+                        .map(CustomerDTO::fromCustomer) // Assuming you have a static method in CustomerDTO
+                        .collect(Collectors.toList())
+        );
+
+     
+        return dto;
+    }
+
     @GetMapping
-    public ResponseEntity<List<AccountDTO>> getAllAccounts() {
-        List<AccountDTO> accountDTOList = accountService.getAllAccounts()
+    public ResponseEntity<List<AccountWithCustomersDTO>> getAllAccounts() {
+        List<AccountWithCustomersDTO> accountDTOList = accountService.getAllAccounts()
                 .stream()
-                .map(AccountDTO::new) // Assuming a constructor in AccountDTO that takes an Account object
+                .map(this::convertToAccountWithCustomersDTO)
                 .collect(Collectors.toList());
         return new ResponseEntity<>(accountDTOList, HttpStatus.OK);
     }

@@ -1,16 +1,15 @@
 package com.example.AccountCustomerCheck.account;
 
-  
 import java.util.ArrayList;
 import java.util.List;
 
 import com.example.AccountCustomerCheck.check.Check;
 import com.example.AccountCustomerCheck.customer.Customer;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-
 
 @Entity
 @Getter
@@ -23,22 +22,25 @@ public class Account {
     private String accountNumber;
 
     @ManyToMany
-    @JoinTable(
-        name = "customer_account",
-        joinColumns = @JoinColumn(name = "account_id"),
-        inverseJoinColumns = @JoinColumn(name = "customer_id")
-    )
+    @JoinTable(name = "customer_account", joinColumns = @JoinColumn(name = "account_id"), inverseJoinColumns = @JoinColumn(name = "customer_id"))
     private List<Customer> customers = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "issuerAccount", cascade = CascadeType.ALL)
     private List<Check> issuedChecks = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "receiverAccount", cascade = CascadeType.ALL)
     private List<Check> receivedChecks = new ArrayList<>();
 
     // Other account-related attributes, getters, and setters
 
     public Account() {
+        // Default constructor
+    }
+
+    public Account(Long id) {
+        this.id = id;
         // Default constructor
     }
 

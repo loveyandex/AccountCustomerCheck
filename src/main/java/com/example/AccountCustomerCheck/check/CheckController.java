@@ -16,6 +16,17 @@ public class CheckController {
     @Autowired
     private CheckService checkService; // Assuming you have a CheckService
 
+     
+
+    @GetMapping("/customer/{customerId}")
+    public List<Check> getChecksForCustomer(@PathVariable Long customerId) {
+        return checkService.getChecksForCustomer(customerId);
+    }
+
+
+
+
+
     @GetMapping
     public ResponseEntity<List<CheckDTO>> getAllChecks() {
         List<CheckDTO> checkDTOList = checkService.getAllChecks()

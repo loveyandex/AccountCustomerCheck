@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.example.AccountCustomerCheck.account.Account;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -22,6 +23,8 @@ public class Customer {
     private String lastName; 
     
 
+     
+    @JsonIgnore
     @ManyToMany(mappedBy = "customers")
     private List<Account> accounts = new ArrayList<>();
 
@@ -42,6 +45,11 @@ public class Customer {
         accounts.remove(account);
         account.getCustomers().remove(this);
     }
-
+    // Constructor for creating Customer from DTO
+    public Customer(CustomerDTO customerDTO) {
+        this.firstName = customerDTO.getFirstName();
+        this.lastName = customerDTO.getLastName();
+        // Map other properties accordingly
+    }
     // Other helper methods
 }

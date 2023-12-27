@@ -1,16 +1,18 @@
 package com.example.AccountCustomerCheck.check;
- 
+
 import java.time.Instant;
 
 import com.example.AccountCustomerCheck.account.Account;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity(name = "cheuqe")
 @Getter
 @Setter
+@NoArgsConstructor
 public class Check {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,4 +37,15 @@ public class Check {
     protected void onCreate() {
         createdAt = Instant.now();
     }
+
+    // Constructor for creating Check from DTO
+    public Check(CheckDTO checkDTO, Account issuerAccount, Account receiverAccount) {
+        this.description = checkDTO.getDescription();
+        this.createdAt = Instant.now();
+        this.issuerAccount = issuerAccount;
+        this.receiverAccount = receiverAccount;
+        // Map other properties accordingly
+
+    }
+
 }

@@ -3,6 +3,9 @@ package com.example.AccountCustomerCheck.account;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.AccountCustomerCheck.customer.Customer;
+import com.example.AccountCustomerCheck.customer.CustomerService;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -21,14 +24,25 @@ public class AccountService {
         return optionalAccount.orElse(null);
     }
 
+      @Autowired
+    private CustomerService customerService; // Assuming you have a CustomerService
+
     public Account createAccount(AccountDTO accountDTO) {
-        // Create a new Account entity based on the DTO
+        // Create a new account
         Account newAccount = new Account();
-        // Populate fields based on the DTO
-        // For example: newAccount.setAccountNumber(accountDTO.getAccountNumber());
-        // Note: Handle relationships such as customers, issuedChecks, and receivedChecks appropriately
+        newAccount.setAccountNumber(accountDTO.getAccountNumber());
+        // Set other properties accordingly
+
+        // Retrieve customers based on their IDs from the AccountDTO
+        List<Customer> customers = customerService.getCustomersByIds(accountDTO.getCustomerIds());
+
+        // Associate customers with the account
+        newAccount.setCustomers(customers);
+
+        // Save the account (this will also update the account_customer join table)
         return accountRepository.save(newAccount);
     }
+
 
     public Account updateAccount(Long accountId, AccountDTO accountDTO) {
         Optional<Account> optionalAccount = accountRepository.findById(accountId);
