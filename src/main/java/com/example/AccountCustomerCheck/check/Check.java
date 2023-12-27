@@ -2,7 +2,15 @@ package com.example.AccountCustomerCheck.check;
  
 import java.time.Instant;
 
-@Entity
+import com.example.AccountCustomerCheck.account.Account;
+
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
+@Entity(name = "cheuqe")
+@Getter
+@Setter
 public class Check {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
