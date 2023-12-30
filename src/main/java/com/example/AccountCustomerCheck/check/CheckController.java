@@ -24,6 +24,17 @@ public class CheckController {
     }
 
 
+    @GetMapping("/customer/{customerId}/query1")
+    public List<Check> getChecksForCustomerQuery1(@PathVariable Long customerId) {
+        return checkService.getChecksForCustomerQuery1(customerId);
+    }
+
+    @GetMapping("/customer/{customerId}/query2")
+    public List<Check> getChecksForCustomerQuer2(@PathVariable Long customerId) {
+        return checkService.getChecksForCustomerQuery2(customerId);
+    }
+
+
 
 
 

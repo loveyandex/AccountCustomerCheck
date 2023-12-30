@@ -24,6 +24,19 @@ public class CheckService {
     }
 
 
+    public List<Check> getChecksForCustomerQuery1(Long customerId) {
+        // Assuming you have a method in CheckRepository for the custom query
+        // E.g., findByIssuerAccount_Customers_IdOrReceiverAccount_Customers_Id
+        return checkRepository.findIssuerAccountChecks(customerId);
+    }
+
+    public List<Check> getChecksForCustomerQuery2(Long customerId) {
+        // Assuming you have a method in CheckRepository for the custom query
+        // E.g., findByIssuerAccount_Customers_IdOrReceiverAccount_Customers_Id
+        return checkRepository.findByIssuerAccount_Customers_IdOrReceiverAccount_Customers_Id2(customerId);
+    }
+
+
 
     public List<Check> getAllChecks() {
         return checkRepository.findAll();
